@@ -1,1 +1,3 @@
-# BeiJingNewssafdadsfadaf
+# 北京新闻android客户端和服务端
+	服务端集成非常简单只要把服务端文件夹中的zhbj文件放入tomcat服务器的root目录下就可以了
+客户端集成也非常简单,把工程和三个依赖库导入到eclipse中,修改ConstantUtils类中base_ip,改成你服务器的ip地址

@@ -1,0 +1,145 @@
+package com.atguigu.beijingnews.fragment;
+
+import java.util.List;
+
+import com.atguigu.beijingnews.MainActivity;
+import com.atguigu.beijingnews.base.impl.NewsCenterPager;
+import com.atguigu.beijingnews.domain.NewsCenterBean.NewsCenterMenu;
+import com.atguigu.beijingnews.R;
+
+import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+/**
+ * 左侧菜单对应的Fragment
+ * @author 杨光福
+ *
+ */
+public class LeftmenuFragment extends BaseFragment {
+
+	/**
+	 * 左侧菜单对应的数据
+	 */
+	private List<NewsCenterMenu> leftmenuData;
+	
+	private ListView listView;
+	
+	/**
+	 * 当前要高亮显示的位置
+	 */
+	private int selectPosition;
+	
+	private MyAdatper adatper;
+
+
+	@Override
+	public View initView() {
+		listView = new ListView(activity);
+		listView.setBackgroundColor(Color.BLACK);
+		listView.setPadding(0, 40, 0, 0);
+		
+		//设置点击事件
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				
+				//1.点击某一条的时候高亮显示
+				selectPosition = position;
+				adatper.notifyDataSetChanged();//会导致适配器的getCount()->getView();
+				
+				
+				//2.把SlidingMenu菜单收
+				MainActivity mainActivity = (MainActivity) activity;
+				mainActivity.getSlidingMenu().toggle();//开<->关
+				
+				
+				//3.切换对应的详情页面:新闻详情，图组详情，专题详情，互动详情页面
+				switchePager(position);
+				
+			}
+		});
+		
+		return listView;
+	}
+	
+	/**
+	 * 设置左侧菜单对应的数据
+	 * @param leftmenuData
+	 */
+	public void setLeftmenuData(List<NewsCenterMenu> leftmenuData){
+		this.leftmenuData = leftmenuData;
+//		for(int i=0;i<leftmenuData.size();i++){
+//			System.out.println("左侧菜单接收数据："+leftmenuData.get(i).title);
+//		}
+		
+		//设置适配器
+		adatper = new MyAdatper();
+		listView.setAdapter(adatper);
+		
+		switchePager(0);
+		
+	}
+	
+	/**
+	 * 切换到对应的详情页面
+	 * @param position
+	 */
+	private void switchePager(int position) {
+		MainActivity mainActivity = (MainActivity) activity;
+		ContentFragment contentFragment = mainActivity.getContentFragment();
+		NewsCenterPager newsCenterPager = contentFragment.getNewsCenterPager();
+		newsCenterPager.switchePager(position);
+	}
+
+	class MyAdatper extends BaseAdapter{
+
+		@Override
+		public int getCount() {
+			return leftmenuData.size();
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			TextView view = (TextView) View.inflate(activity, R.layout.leftmenu_item, null);
+			view.setText(leftmenuData.get(position).title);
+			
+//			if(selectPosition == position){
+//				view.setEnabled(true);
+//			}else{
+//				view.setEnabled(false);
+//			}
+			//设置高亮显示
+			view.setEnabled(selectPosition == position);
+			
+			return view;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		
+		
+	}
+	
+}

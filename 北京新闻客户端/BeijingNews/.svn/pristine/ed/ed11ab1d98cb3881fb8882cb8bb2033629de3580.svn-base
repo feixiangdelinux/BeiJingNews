@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/title_red_bg" >
+
+    <ImageButton
+        android:id="@+id/ib_base_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dip"
+        android:background="@android:color/transparent"
+        android:src="@drawable/img_menu"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_titlebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:text="标题列表"
+        android:textColor="#ffffff"
+        android:textSize="23sp" />
+
+    <ImageButton
+        android:id="@+id/ib_base_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dip"
+        android:background="@android:color/transparent"
+        android:src="@drawable/back"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_marginRight="10dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/ib_base_textsize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_textsize"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/ib_base_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_share"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

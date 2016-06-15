@@ -1,0 +1,73 @@
+package com.atguigu.beijingnews.utils;
+
+import android.graphics.Bitmap;
+import android.os.Handler;
+
+/**
+ * 图片的缓存
+ * @author 杨光福
+ * @Time 2015-7-31  上午11:01:56
+ */
+public class BitmapCacheUtils {
+	
+	/**
+	 * 网络缓存
+	 */
+	private NetCacheUtils netCacheUtils;
+	
+	/**
+	 * 本地缓存
+	 */
+	private LocalCacheUtils localCacheUtils;
+	
+	/**
+	 * 内存缓存
+	 */
+	
+	private MemoryCacheUtils memoryCacheUtils;
+	
+	public BitmapCacheUtils(Handler handler){
+		memoryCacheUtils = new MemoryCacheUtils();
+		localCacheUtils = new LocalCacheUtils();
+		netCacheUtils = new NetCacheUtils(handler,localCacheUtils,memoryCacheUtils);
+	}
+
+
+	/**
+	 * 根据url请求图片
+	 * @param listimage
+	 * @return
+	 */
+	public Bitmap getBitmapFromUrl(String listimage,int postion) {
+		//1.内存取图片
+		if(memoryCacheUtils != null){
+			Bitmap bitmap= memoryCacheUtils.getBitmap(listimage);
+			if(bitmap != null){
+				System.out.println("从内存缓存中取图片："+postion);
+				return bitmap;
+			}
+		}
+		
+		
+		//2.在本地取图片
+		if(localCacheUtils != null){
+			Bitmap bitmap= localCacheUtils.getBitmapFromUrl(listimage);
+			if(bitmap != null){
+				System.out.println("从本地缓存中取图片："+postion);
+				return bitmap;
+			}
+		}
+		//3.在网络请求图片
+		if(netCacheUtils != null){
+			Bitmap bitmap = netCacheUtils.getBitmapFromUrl(listimage,postion);
+			if(bitmap != null){
+				System.out.println("从网络缓存中取图片："+postion);
+				return bitmap;
+			}
+			
+		}
+		
+		return null;
+	}
+
+}

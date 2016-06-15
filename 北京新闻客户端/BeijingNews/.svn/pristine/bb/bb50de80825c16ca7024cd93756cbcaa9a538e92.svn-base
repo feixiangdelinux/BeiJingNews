@@ -1,0 +1,87 @@
+package com.atguigu.beijingnews.fragment;
+
+import java.util.List;
+
+import com.atguigu.beijingnews.NewsCenterBean.NewsCenterMenu;
+import com.atguigu.beijingnews.R;
+
+import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+/**
+ * 左侧菜单对应的Fragment
+ * @author 杨光福
+ *
+ */
+public class LeftmenuFragment extends BaseFragment {
+
+	/**
+	 * 左侧菜单对应的数据
+	 */
+	private List<NewsCenterMenu> leftmenuData;
+	
+	private ListView listView;
+
+
+	@Override
+	public View initView() {
+		listView = new ListView(activity);
+		listView.setPadding(0, 40, 0, 0);
+		
+		return listView;
+	}
+	
+	/**
+	 * 设置左侧菜单对应的数据
+	 * @param leftmenuData
+	 */
+	public void setLeftmenuData(List<NewsCenterMenu> leftmenuData){
+		this.leftmenuData = leftmenuData;
+//		for(int i=0;i<leftmenuData.size();i++){
+//			System.out.println("左侧菜单接收数据："+leftmenuData.get(i).title);
+//		}
+		
+		//设置适配器
+		listView.setAdapter(new MyAdatper());
+		
+		
+		
+	}
+	
+	class MyAdatper extends BaseAdapter{
+
+		@Override
+		public int getCount() {
+			return leftmenuData.size();
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			TextView view = (TextView) View.inflate(activity, R.layout.leftmenu_item, null);
+			view.setText(leftmenuData.get(position).title);
+			
+			return view;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		
+		
+	}
+	
+}

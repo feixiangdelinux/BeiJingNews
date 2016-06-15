@@ -1,0 +1,25 @@
+package com.atguigu.beijingnews.fragment;
+
+import android.graphics.Color;
+import android.view.View;
+import android.widget.TextView;
+
+/**
+ * 左侧菜单对应的Fragment
+ * @author 杨光福
+ *
+ */
+public class LeftmenuFragment extends BaseFragment {
+
+	@Override
+	public View initView() {
+		// TODO Auto-generated method stub
+		TextView textView = new TextView(activity);
+		textView.setText("左侧菜单");
+		textView.setTextSize(25);
+		textView.setTextColor(Color.BLACK);
+		
+		return textView;
+	}
+	
+}

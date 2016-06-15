@@ -1,0 +1,174 @@
+package com.atguigu.beijingnews.base.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.TextView;
+
+import com.atguigu.beijingnews.MainActivity;
+import com.atguigu.beijingnews.base.BasePager;
+import com.atguigu.beijingnews.base.impl.detailmenu.DetailMenuBasePager;
+import com.atguigu.beijingnews.base.impl.detailmenu.InteracMenuDetailPager;
+import com.atguigu.beijingnews.base.impl.detailmenu.NewsMenuDetailPager;
+import com.atguigu.beijingnews.base.impl.detailmenu.PhotosMenuDetailPager;
+import com.atguigu.beijingnews.base.impl.detailmenu.TopicMenuDetailPager;
+import com.atguigu.beijingnews.domain.NewsCenterBean;
+import com.atguigu.beijingnews.domain.NewsCenterBean.NewsCenterMenu;
+import com.atguigu.beijingnews.fragment.LeftmenuFragment;
+import com.atguigu.beijingnews.utils.CachUtils;
+import com.atguigu.beijingnews.utils.ConstantUtils;
+import com.google.gson.Gson;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+
+/**
+ * 新闻中心
+ * 
+ * @author 杨光福
+ * 
+ */
+public class NewsCenterPager extends BasePager {
+
+	/**
+	 * 左侧菜单对应的数据
+	 */
+	private List<NewsCenterMenu> leftmenuData;
+	/**
+	 * 左侧菜单对应的页面
+	 */
+	private ArrayList<DetailMenuBasePager> menuBasePagers;
+
+	public NewsCenterPager(Activity activity) {
+		super(activity);
+	}
+
+	@Override
+	public void initData() {
+		super.initData();
+		System.out.println("新闻中心的数据被初始化了...");
+		// 按钮显示出来
+		ib_base_menu.setVisibility(View.VISIBLE);
+		tv_titlebar.setText("新闻");
+
+		TextView tv = new TextView(activity);
+		tv.setText("新闻中心的内容");
+		tv.setTextSize(25);
+		tv.setGravity(Gravity.CENTER);
+		tv.setTextColor(Color.RED);
+		// 添加到内容里面
+		fl_content_fragment.addView(tv);
+		
+		//得到上次缓存的信息
+		String json = CachUtils.getString(activity, ConstantUtils.newscenter_url);
+		if(!TextUtils.isEmpty(json)){
+			processData(json);
+		}
+
+		// 请求网络
+		getDataFromNet();
+
+	}
+
+	/**
+	 * 根据网络连接请求数据
+	 */
+	private void getDataFromNet() {
+		HttpUtils httpUtils = new HttpUtils();
+		httpUtils.send(HttpMethod.GET, ConstantUtils.newscenter_url,
+				new RequestCallBack<String>() {
+
+					/**
+					 * 当成功请求的时候，回调这个方法
+					 */
+					@Override
+					public void onSuccess(ResponseInfo<String> responseInfo) {
+						// TODO Auto-generated method stub
+						String result = responseInfo.result;
+						System.out.println("网络请求成功了:" + result);
+						//缓存数据
+						CachUtils.setString(activity, ConstantUtils.newscenter_url, result);
+						processData(result);
+
+					}
+
+					/**
+					 * 当请求失败的时候，回调这个方法
+					 */
+					@Override
+					public void onFailure(HttpException error, String msg) {
+						// TODO Auto-generated method stub
+						System.out.println("网络请求失败了" + msg);
+
+					}
+				});
+	}
+
+	/**
+	 * 解析json数据和处理现实数据
+	 * 
+	 * @param result
+	 */
+	protected void processData(String json) {
+		// 1.解析数据-：手动解析和Gson
+		Gson gson = new Gson();
+		NewsCenterBean newsCenterBean = gson.fromJson(json,
+				NewsCenterBean.class);
+		System.out.println("解析成功"
+				+ newsCenterBean.data.get(0).children.get(0).title);
+
+		// 左侧菜单对应的数据
+		leftmenuData = newsCenterBean.data;
+
+		// 3.显示数据-添加4个详情页面
+		menuBasePagers = new ArrayList<DetailMenuBasePager>();
+		menuBasePagers.add(new NewsMenuDetailPager(activity,newsCenterBean.data.get(0)));// 新闻对应的详情页面
+		menuBasePagers.add(new TopicMenuDetailPager(activity));// 专题对应的详情页面
+		menuBasePagers.add(new PhotosMenuDetailPager(activity));// 图组对应的详情页面
+		menuBasePagers.add(new InteracMenuDetailPager(activity));// 互动对应的详情页面
+
+		// 2.把数据传递给左侧菜单
+		// MainActivyt->LeftmenuFragment->setLeftmenuData(数据)
+		MainActivity mainActivity = (MainActivity) activity;
+		LeftmenuFragment leftmenuFragment = mainActivity.getLeftmenuFragment();
+		leftmenuFragment.setLeftmenuData(leftmenuData);
+
+	}
+
+	/**
+	 * 根据位置切换到对应的详情页面
+	 * 
+	 * @param position
+	 */
+	public void switchePager(int position) {
+
+		// 设置标题
+
+		tv_titlebar.setText(leftmenuData.get(position).title);
+
+		DetailMenuBasePager basePager = menuBasePagers.get(position);
+		View rootView = basePager.rootView;
+		basePager.initData();//很总要-如果没有调用，对应的页面的initData就没有被执行
+
+		fl_content_fragment.removeAllViews();
+
+		fl_content_fragment.addView(rootView);
+		
+		//当切换到图组详情页面的时候，显示按钮，其他地方都隐藏
+		if(position==2){
+			
+			ib_base_switch_list_grid.setVisibility(View.VISIBLE);
+		}else{
+			ib_base_switch_list_grid.setVisibility(View.GONE);
+		}
+
+	}
+
+}

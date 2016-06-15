@@ -1,0 +1,47 @@
+package com.atguigu.beijingnews.fragment;
+
+import java.util.List;
+
+import com.atguigu.beijingnews.NewsCenterBean.NewsCenterMenu;
+
+import android.graphics.Color;
+import android.view.View;
+import android.widget.TextView;
+
+/**
+ * 左侧菜单对应的Fragment
+ * @author 杨光福
+ *
+ */
+public class LeftmenuFragment extends BaseFragment {
+
+	/**
+	 * 左侧菜单对应的数据
+	 */
+	private List<NewsCenterMenu> leftmenuData;
+
+
+	@Override
+	public View initView() {
+		// TODO Auto-generated method stub
+		TextView textView = new TextView(activity);
+		textView.setText("左侧菜单");
+		textView.setTextSize(25);
+		textView.setTextColor(Color.BLACK);
+		
+		return textView;
+	}
+	
+	/**
+	 * 设置左侧菜单对应的数据
+	 * @param leftmenuData
+	 */
+	public void setLeftmenuData(List<NewsCenterMenu> leftmenuData){
+		this.leftmenuData = leftmenuData;
+		for(int i=0;i<leftmenuData.size();i++){
+			System.out.println("左侧菜单接收数据："+leftmenuData.get(i).title);
+		}
+		
+	}
+	
+}

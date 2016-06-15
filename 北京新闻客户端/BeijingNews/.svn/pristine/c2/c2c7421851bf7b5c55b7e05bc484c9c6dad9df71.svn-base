@@ -1,0 +1,36 @@
+package com.atguigu.beijingnews.base.impl.detailmenu;
+
+import android.app.Activity;
+import android.view.View;
+import android.widget.GridView;
+import android.widget.ListView;
+
+import com.atguigu.beijingnews.R;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+
+/**
+ * 图组对应的详情页面
+ * @author 杨光福
+ * @Time 2015-7-25  下午2:25:37
+ */
+public class PhotosMenuDetailPager extends DetailMenuBasePager {
+	
+	@ViewInject(R.id.lv_photos)
+	private ListView lv_photos;
+	
+	@ViewInject(R.id.gv_photos)
+	private GridView gv_photos;
+
+	public PhotosMenuDetailPager(Activity activity) {
+		super(activity);
+	}
+
+	@Override
+	public View initView() {
+		View view = View.inflate(activity, R.layout.photos_menudetail_pager, null);
+		ViewUtils.inject(this, view);
+		return view;
+	}
+
+}
